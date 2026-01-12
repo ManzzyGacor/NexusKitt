@@ -1,132 +1,487 @@
-/* --- BASE & GALAXY BG (SAMA SEPERTI SEBELUMNYA) --- */
+/* =========================================
+   NEXUSKIT GLOBAL STYLES
+   Theme: Galaxy Neon (Deep Purple & Cyan)
+   ========================================= */
+
 :root {
-  --primary: #00f3ff;
-  --secondary: #bd00ff;
-  --bg-dark: #05070a;
+  --primary: #00f3ff;   /* Cyan Neon */
+  --secondary: #bd00ff; /* Purple Neon */
+  --bg-dark: #05070a;   /* Deep Space Black */
   --glass: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --text-gray: #ccc;
 }
 
-html {
-  scroll-behavior: smooth; /* INI KUNCINYA */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
   background-color: var(--bg-dark);
   color: #fff;
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
+  min-height: 100vh;
+  overflow-x: hidden; /* Mencegah scroll horizontal */
   position: relative;
 }
 
-/* Background Stars CSS (Pasti Muncul) */
+/* =========================================
+   1. BACKGROUND (CSS PURE - NO IMAGES)
+   ========================================= */
+
+/* Lapisan Bintang */
 body::before {
-  content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
   background-image: 
     radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
     radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px);
   background-size: 550px 550px, 350px 350px;
   background-position: 0 0, 40px 60px;
-  z-index: -2; opacity: 0.8;
-}
-/* Nebula Effect */
-body::after {
-  content: ""; position: fixed; top: 50%; left: 50%; width: 80vw; height: 80vh;
-  background: radial-gradient(circle, rgba(189,0,255,0.15) 0%, rgba(0,243,255,0.05) 40%, transparent 70%);
-  transform: translate(-50%, -50%); z-index: -1; filter: blur(80px);
+  z-index: -2;
+  opacity: 0.6;
 }
 
-/* --- NAVBAR --- */
+/* Lapisan Nebula (Cahaya Redup) */
+body::after {
+  content: "";
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 80vw; height: 80vh;
+  background: radial-gradient(circle, rgba(189,0,255,0.15) 0%, rgba(0,243,255,0.05) 50%, transparent 70%);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  filter: blur(80px);
+}
+
+/* =========================================
+   2. NAVBAR
+   ========================================= */
 .navbar {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem 5%;
-  background: rgba(5, 7, 10, 0.85); /* Lebih gelap dikit */
-  backdrop-filter: blur(20px);
-  position: sticky; top: 0; z-index: 999;
+  background: rgba(5, 7, 10, 0.85); /* Semi transparan */
+  backdrop-filter: blur(15px);      /* Efek blur kaca */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   border-bottom: 1px solid var(--glass-border);
 }
-.nav-links { display: flex; list-style: none; gap: 30px; }
-.nav-links a { color: #ccc; text-decoration: none; font-weight: 500; transition: 0.3s; }
-.nav-links a:hover { color: var(--primary); }
 
-@media (max-width: 768px) {
-  .nav-links { display: none; } /* Mobile: Hide Menu dulu biar rapi */
+.logo-container svg {
+  height: 40px;
+  width: auto;
+  transition: 0.3s;
+}
+.logo-container:hover svg {
+  filter: drop-shadow(0 0 5px var(--primary));
 }
 
-/* --- SECTIONS (ONE PAGE LAYOUT) --- */
-.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
 
-.one-page-section {
-  min-height: 100vh; /* Tiap section minimal setinggi layar */
+.nav-links a {
+  color: var(--text-gray);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+/* Tombol Login/Profile di Navbar */
+#auth-btn {
+  background: linear-gradient(90deg, var(--secondary), #8a2be2);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  width: auto;
+  margin: 0;
+  box-shadow: 0 0 15px rgba(189, 0, 255, 0.3);
+}
+#auth-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(189, 0, 255, 0.6);
+}
+
+/* =========================================
+   3. LAYOUT & SECTIONS (SPA TABS)
+   ========================================= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 85vh;
+}
+
+.view-section {
+  display: none; /* Default tersembunyi */
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-section.active {
+  display: block; /* Muncul jika aktif */
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+.section-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   4. HERO DASHBOARD (HOME)
+   ========================================= */
+.hero-content {
+  text-align: center;
+  padding-top: 5vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 80px 0; /* Jarak atas bawah agar tidak kepotong navbar */
-  border-bottom: 1px solid rgba(255,255,255,0.02);
+  align-items: center;
 }
 
-.section-header { text-align: center; margin-bottom: 50px; }
-.section-header h2 { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
-.section-header p { color: #888; }
+.hero-content h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem); /* Responsive Font */
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
 
-/* HERO Styling */
-#home { text-align: center; }
-.hero-content h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1; margin-bottom: 20px; }
-.gradient-text { background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; color: transparent; }
+.gradient-text {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+}
 
-/* Planet Animasi */
+.hero-content p {
+  color: var(--text-gray);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* Animasi Planet */
 .planet-anim {
-  width: 220px; height: 220px; margin: 40px auto;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #00f3ff, #bd00ff, #000);
-  box-shadow: 0 0 60px rgba(189, 0, 255, 0.3);
-  position: relative; animation: float 6s ease-in-out infinite;
+  box-shadow: 
+    0 0 60px rgba(189, 0, 255, 0.4),
+    inset -20px -20px 50px rgba(0,0,0,0.8);
+  position: relative;
+  animation: floatPlanet 6s ease-in-out infinite;
+  margin-bottom: 40px;
 }
+
+/* Cincin Planet */
 .planet-anim::before {
-  content: ""; position: absolute; top: 50%; left: 50%; width: 280px; height: 70px;
-  border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); border-top: 4px solid var(--primary);
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 280px; height: 60px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top: 5px solid var(--primary);
   transform: translate(-50%, -50%) rotate(-20deg);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
 }
-@keyframes float { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(-20px);} }
+
+@keyframes floatPlanet {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
 
 .cta-btn {
-  display: inline-block; padding: 15px 50px; background: linear-gradient(90deg, var(--primary), var(--secondary));
-  color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; margin-top: 20px;
-  box-shadow: 0 0 30px rgba(0, 243, 255, 0.3); transition: 0.3s;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  background: var(--primary);
+  color: #000;
+  transition: 0.3s;
+  margin: 10px;
 }
-.cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(0, 243, 255, 0.6); }
+.cta-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--primary); }
 
-/* TOOLS LOCK SYSTEM */
-.tools-locked { position: relative; border-radius: 20px; overflow: hidden; }
-.blur-content { filter: blur(10px); pointer-events: none; opacity: 0.4; transition: 0.5s; }
-
-.lock-overlay {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  text-align: center; z-index: 10; width: 100%;
+.cta-btn.secondary {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
 }
-.lock-overlay h3 { font-size: 2rem; color: #fff; margin-bottom: 10px; }
-.lock-overlay button { width: auto; padding: 10px 30px; background: var(--primary); border:none; border-radius:5px; cursor: pointer; color:#000; font-weight:bold;}
+.cta-btn.secondary:hover { background: rgba(0, 243, 255, 0.1); }
 
-/* Jika UNLOCKED (Lewat JS Nanti) */
-.tools-unlocked .blur-content { filter: none; pointer-events: auto; opacity: 1; }
-.tools-unlocked .lock-overlay { display: none; }
-
-/* Grid Styles */
-.tools-grid, .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-.tool-card, .price-card, .panel-box {
-  background: rgba(20, 25, 40, 0.6); border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px); padding: 30px; border-radius: 16px; text-align: center;
+/* =========================================
+   5. TOOLS PAGE (GRID & LOCK)
+   ========================================= */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  position: relative;
 }
-.tool-card:hover { border-color: var(--primary); transform: translateY(-5px); transition: 0.3s; }
-.price-card.popular { border: 2px solid var(--secondary); box-shadow: 0 0 30px rgba(189, 0, 255, 0.15); }
 
-/* Inputs & Buttons */
-input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid #333; color: #fff; border-radius: 8px; margin: 10px 0; }
-button { width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; margin-top: 10px; cursor: pointer; transition: 0.2s; }
+.tool-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s;
+}
 
-/* MODAL */
-.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-.modal-content { background: #0b0d12; margin: 10% auto; padding: 40px; border: 1px solid var(--primary); width: 90%; max-width: 400px; border-radius: 15px; position:relative; text-align: center; }
-.close { position: absolute; top: 15px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; }
+.tool-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-5px);
+}
 
-footer { text-align: center; padding: 40px; color: #555; font-size: 0.9rem; }
+.tool-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Labels */
+.tag { font-size: 0.7rem; padding: 4px 8px; border-radius: 6px; }
+.tag.free { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
+.tag.vip { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
+
+/* LOCK OVERLAYS */
+
+/* 1. Guest Lock (Layar Hitam Penuh) */
+.full-lock-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5, 7, 10, 0.95); /* Hampir solid */
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+}
+
+.full-lock-overlay h3 { color: #ff4444; font-size: 1.5rem; margin-bottom: 10px; }
+.full-lock-overlay button { width: auto; background: var(--primary); color: #000; }
+
+/* 2. VIP Lock (Overlay di Card) */
+.vip-lock-msg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  display: none; /* Default Hidden */
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron';
+  color: #ffc107;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* State: Is Locked */
+.tool-card.is-locked .vip-lock-msg { display: flex; }
+.tool-card.is-locked button, 
+.tool-card.is-locked input { pointer-events: none; opacity: 0.3; }
+
+/* Inputs & Tool Results */
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+  color: #fff;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+input:focus { outline: none; border-color: var(--primary); }
+
+.result-box {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+  font-family: monospace;
+  color: var(--primary);
+  min-height: 40px;
+  word-break: break-all;
+  border: 1px dashed #333;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--secondary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover { filter: brightness(1.2); }
+button:active { transform: scale(0.98); }
+
+/* =========================================
+   6. PRICING & RESELLER
+   ========================================= */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.price-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 40px 30px;
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.price-card.popular {
+  border: 1px solid var(--secondary);
+  box-shadow: 0 0 30px rgba(189, 0, 255, 0.15);
+}
+.price-card.popular::after {
+  content: "BEST VALUE";
+  position: absolute;
+  top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--secondary);
+  padding: 5px 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  border-radius: 20px;
+}
+
+.price-card h3 { font-size: 1.5rem; margin-bottom: 10px; }
+.price-card .price { font-size: 2rem; color: var(--primary); font-weight: bold; margin-bottom: 20px; }
+.price-card ul { list-style: none; margin-bottom: 30px; text-align: left; }
+.price-card ul li { margin-bottom: 10px; color: #ccc; }
+.price-card ul li::before { content: "✓"; color: var(--primary); margin-right: 10px; }
+
+.buy-btn {
+  display: block;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.buy-btn:hover { background: var(--primary); }
+
+/* Panel Reseller */
+.panel-box {
+  background: var(--glass);
+  border: 1px solid var(--primary);
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* =========================================
+   7. MODAL LOGIN
+   ========================================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  animation: fadeInModal 0.3s;
+}
+
+@keyframes fadeInModal { from {opacity: 0;} to {opacity: 1;} }
+
+.modal-content {
+  background: #0f1218;
+  border: 1px solid var(--primary);
+  box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
+  margin: 15vh auto;
+  padding: 40px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 15px; right: 20px;
+  font-size: 30px;
+  color: #aaa;
+  cursor: pointer;
+}
+.close:hover { color: #fff; }
+
+.modal-content h2 { font-family: 'Orbitron'; margin-bottom: 20px; }
+.modal-content a { color: var(--primary); text-decoration: none; }
+
+/* =========================================
+   8. FOOTER & RESPONSIVE
+   ========================================= */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: #555;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 50px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .nav-links { display: none; } /* Sembunyikan menu link di HP agar rapi */
+  
+  .hero-content h1 { font-size: 2.5rem; }
+  
+  .planet-anim { width: 150px; height: 150px; }
+  .planet-anim::before { width: 220px; }
+  
+  .container { padding: 10px; }
+}
