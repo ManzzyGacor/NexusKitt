@@ -10,7 +10,7 @@
 <body class="dark-theme">
 
   <nav class="navbar">
-    <div class="logo-container">
+    <div class="logo-container" onclick="window.switchView('home')" style="cursor:pointer;">
       <svg width="140" height="40" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
         <defs><linearGradient id="gradNav" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#00f3ff;stop-opacity:1" /><stop offset="100%" style="stop-color:#bd00ff;stop-opacity:1" /></linearGradient></defs>
         <circle cx="30" cy="30" r="20" stroke="url(#gradNav)" stroke-width="3" fill="none" /><circle cx="30" cy="30" r="8" fill="#fff" />
@@ -18,118 +18,107 @@
       </svg>
     </div>
     <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#tools">Tools</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-      <li id="reseller-menu" style="display:none;"><a href="#reseller">Panel</a></li>
+      <li><a href="#" onclick="window.switchView('home')">Dashboard</a></li>
+      <li><a href="#" onclick="window.switchView('tools')">Tools</a></li>
+      <li><a href="#" onclick="window.switchView('pricing')">Pricing</a></li>
+      <li id="reseller-menu" style="display:none;"><a href="#" onclick="window.switchView('reseller')">Panel</a></li>
     </ul>
     <div class="auth-area">
-        <button id="auth-btn" onclick="openLogin()">Login</button>
+        <button id="auth-btn" onclick="window.openLogin()">Login</button>
     </div>
   </nav>
 
   <main class="container">
     
-    <section id="home" class="one-page-section">
+    <section id="home" class="view-section active">
       <div class="hero-content">
         <h1>Welcome to <span class="gradient-text">NexusKit</span></h1>
         <p>The Ultimate Multi-Tools Platform across the Galaxy.</p>
-        
         <div class="planet-anim"></div>
-
-        <a href="#pricing" class="cta-btn">Get Access</a>
+        <div class="hero-btns">
+            <button class="cta-btn" onclick="window.switchView('pricing')">Join Membership</button>
+            <button class="cta-btn secondary" onclick="window.switchView('tools')">Try Tools</button>
+        </div>
       </div>
     </section>
 
-    <section id="tools" class="one-page-section">
+    <section id="tools" class="view-section" style="display:none;">
       <div class="section-header">
         <h2>Galactic Tools</h2>
-        <p>Powerful utilities for your daily mission.</p>
+        <p>Status: <span id="status-badge" class="badge">Guest</span></p>
       </div>
       
-      <div id="tools-container" class="tools-locked">
-          <div class="lock-overlay">
-              <h3>🔒 ACCESS LOCKED</h3>
-              <p>Please Login & Subscribe to access tools.</p>
-              <button onclick="openLogin()">Login Now</button>
-          </div>
-          
-          <div class="tools-grid blur-content">
-             <div class="tool-card">
-                <h3>🔐 Pass Generator</h3>
-                <button onclick="toolPassGen()">Generate</button>
-                <div id="res-pass" class="result-box"></div>
-            </div>
-            <div class="tool-card">
-                <h3>📝 Word Counter</h3>
-                <input type="text" id="word-input" placeholder="Type here..." oninput="toolWordCount()">
-                <p id="res-word">Words: 0</p>
-            </div>
-            <div class="tool-card">
-                <h3>🎨 Color Picker</h3>
-                <input type="color" id="color-input" onchange="toolColor()">
-                <p id="res-color">#000000</p>
-            </div>
-            <div class="tool-card">
-                <h3>ea Base64 Encode</h3>
-                <input type="text" id="b64-input" placeholder="Text...">
-                <button onclick="toolBase64()">Encode</button>
-                <div id="res-b64" class="result-box"></div>
-            </div>
-             <div class="tool-card">
-              <h3>🌐 My IP</h3>
-              <button onclick="toolMyIP()">Check IP</button>
-              <div id="res-ip" class="result-box"></div>
-            </div>
-            <div class="tool-card">
-                <h3>🏷️ Diskon Calc</h3>
-                <input type="number" id="price" placeholder="Harga">
-                <input type="number" id="disc" placeholder="Diskon %">
-                <button onclick="toolDiscount()">Hitung</button>
-                <div id="res-disc" class="result-box"></div>
-            </div>
-          </div>
+      <div id="guest-overlay" class="full-lock-overlay">
+          <h3>🔒 ACCESS DENIED</h3>
+          <p>Silahkan Login untuk mengakses Tools.</p>
+          <button onclick="window.openLogin()">Login Now</button>
+      </div>
+
+      <div class="tools-grid">
+        
+        <div class="tool-card" data-type="free">
+            <h3>🔐 Pass Generator <span class="tag free">FREE</span></h3>
+            <button onclick="window.toolPassGen()">Generate</button>
+            <div id="res-pass" class="result-box"></div>
+        </div>
+
+        <div class="tool-card" data-type="free">
+            <h3>📝 Word Counter <span class="tag free">FREE</span></h3>
+            <input type="text" id="word-input" placeholder="Type here..." oninput="window.toolWordCount()">
+            <p id="res-word">Words: 0</p>
+        </div>
+
+        <div class="tool-card" data-type="vip">
+            <div class="vip-lock-msg">🔒 VIP ONLY</div> <h3>ea Base64 Encode <span class="tag vip">VIP</span></h3>
+            <input type="text" id="b64-input" placeholder="Text...">
+            <button onclick="window.toolBase64()">Encode</button>
+            <div id="res-b64" class="result-box"></div>
+        </div>
+
+         <div class="tool-card" data-type="vip">
+            <div class="vip-lock-msg">🔒 VIP ONLY</div>
+            <h3>🌐 Real IP Scanner <span class="tag vip">VIP</span></h3>
+            <button onclick="window.toolMyIP()">Check IP</button>
+            <div id="res-ip" class="result-box"></div>
+        </div>
+
+        <div class="tool-card" data-type="free">
+            <h3>🎨 Color Picker <span class="tag free">FREE</span></h3>
+            <input type="color" id="color-input" onchange="window.toolColor()">
+            <p id="res-color">#000000</p>
+        </div>
+
       </div>
     </section>
 
-    <section id="pricing" class="one-page-section">
-      <div class="section-header">
-        <h2>Choose Your Plan</h2>
-      </div>
+    <section id="pricing" class="view-section" style="display:none;">
+      <div class="section-header"><h2>Upgrade Access</h2></div>
       <div class="pricing-grid">
         <div class="price-card">
-          <h3>VIP</h3>
-          <p class="price">Rp 10.000<span class="month">/bulan</span></p>
-          <ul><li>Access All Tools</li><li>Fast Server</li></ul>
-          <a href="#" class="buy-btn">Order Now</a>
+          <h3>Member</h3>
+          <p class="price">Free</p>
+          <ul><li>Access Basic Tools</li><li>Limited Speed</li></ul>
+          <button onclick="window.openLogin()">Register Free</button>
         </div>
         <div class="price-card popular">
-          <h3>Reseller</h3>
-          <p class="price">Rp 25.000<span class="month">/bulan</span></p>
-          <ul><li>Access Tools</li><li>Create VIP Users</li><li>Dashboard Panel</li></ul>
-          <a href="#" class="buy-btn">Order Now</a>
-        </div>
-        <div class="price-card">
-          <h3>Owner</h3>
-          <p class="price">Rp 50.000<span class="month">/bulan</span></p>
-          <ul><li>Full Access</li><li>Create Reseller</li><li>Source Code</li></ul>
-          <a href="#" class="buy-btn">Order Now</a>
+          <h3>VIP</h3>
+          <p class="price">Rp 10.000</p>
+          <ul><li>Access ALL Tools</li><li>Priority Support</li></ul>
+          <a href="https://wa.me/628123456789" class="buy-btn">Buy VIP</a>
         </div>
       </div>
     </section>
 
-    <section id="reseller" class="one-page-section" style="display:none;">
-      <div class="section-header">
-          <h2>Reseller Command Center</h2>
-      </div>
+    <section id="reseller" class="view-section" style="display:none;">
+      <div class="section-header"><h2>Reseller Panel</h2></div>
       <div class="panel-box">
-        <h3>Add User Role (30 Days)</h3>
+        <h3>Add User Role</h3>
         <input type="text" id="target-username" placeholder="Target Username">
         <select id="role-select">
           <option value="vip">VIP</option>
           <option value="reseller" id="opt-reseller" disabled>Reseller</option>
         </select>
-        <button onclick="addRole()">Add Role</button>
+        <button onclick="window.addRole()">Add Role</button>
       </div>
     </section>
 
@@ -137,19 +126,15 @@
 
   <div id="auth-modal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="closeLogin()">&times;</span>
+      <span class="close" onclick="window.closeLogin()">&times;</span>
       <h2>Login NexusKit</h2>
       <input type="text" id="login-user" placeholder="Username">
       <input type="password" id="login-pass" placeholder="Password">
-      <button onclick="performLogin()">Enter The Galaxy</button>
-      <p style="margin-top:15px; font-size:0.9rem;">Belum punya akun? <a href="#">Daftar disini</a></p>
+      <button onclick="window.performLogin()">Enter The Galaxy</button>
+      <p style="margin-top:10px;">No account? <a href="#" id="reg-link">Register</a></p>
     </div>
   </div>
 
-  <footer>
-    <p>&copy; 2026 NexusKit by ManzzyID</p>
-  </footer>
-
-  <script src="/src/main.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
