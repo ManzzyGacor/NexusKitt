@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="display:flex; align-items:center; justify-content:center; padding:20px;">
+
+  <div class="card-glass smooth-entry" style="width:100%; max-width:380px; padding:40px 30px; text-align:center;">
+    <h2 style="font-family:'Orbitron'; letter-spacing:2px; margin-bottom:10px;">NEXUSKIT</h2>
+    <p style="color:#888; font-size:0.9rem; margin-bottom:30px;">Access your client area</p>
+    
+    <div style="text-align:left;">
+        <label style="font-size:0.8rem; color:#888; margin-bottom:5px; display:block;">USERNAME</label>
+        <input type="text" id="username" class="form-input" placeholder="Enter username">
+        
+        <label style="font-size:0.8rem; color:#888; margin-bottom:5px; display:block; margin-top:15px;">PASSWORD</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••">
+    </div>
+
+    <button onclick="auth('login')" class="btn btn-primary" style="width:100%; margin-top:20px;">LOGIN SYSTEM</button>
+    <button onclick="auth('register')" class="btn btn-outline" style="width:100%; margin-top:10px; border:none; color:#888;">Create new account</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
